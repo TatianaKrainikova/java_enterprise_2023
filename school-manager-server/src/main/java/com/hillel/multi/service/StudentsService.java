@@ -28,6 +28,10 @@ public class StudentsService {
         return new ArrayList<Student>((Collection<? extends Student>) studentRepository.findAll());
     }
 
+    public Student updateStudent(Student student) {
+        return studentRepository.save(student);
+    }
+
     public Student addStudent(Student student) {
         return studentRepository.save(student);
     }
