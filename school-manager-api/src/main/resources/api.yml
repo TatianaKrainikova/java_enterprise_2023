@@ -1,0 +1,229 @@
+openapi: 3.0.3
+
+info:
+  title: School manager
+  description:
+    The specification contains API contracts for school manager operations exposed by the inventory module
+  contact:
+    name: Tatiana Krainikova
+  license:
+    name: study open projects
+  version: 0.0.1
+
+servers:
+  - url: https://{region}.com/{apiVersion}
+    description: Regional endpoints for different geographical areas
+    variables:
+      region:
+        default: westus
+        enum:
+          - westus
+          - eastus2
+          - westcentralus
+          - westeurope
+          - southeastasia
+      apiVersion:
+        default: api/students
+  - url: hhtp://localhost:{port}/api/students
+    description: base path
+    variables:
+      port:
+        enum:
+          - '8080'
+          - '8000'
+          - '5000'
+        default: '8080'
+
+tags:
+  - name: SchoolManager
+    description: Api to manage school functions
+
+paths:
+  /{id}:
+    get:
+      tags:
+        - SchoolManager
+      description: get students by id
+      operationId: getStudentById
+      parameters:
+        - name: id
+          in: path
+          description: id of student
+          required: true
+          schema:
+            type: string
+        - name: verbosity
+          in: query
+          description: param need to filter fields for internal/external calls
+          required: false
+          schema:
+            type: string
+            default: all
+            enum:
+              - all
+      responses:
+        '200':
+          description: Successfully returns Student instance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          links:
+            GetUserById:
+              operationId: getStudentById
+              parameters:
+                studentId: '$response.body#/id'
+              description: |
+                The `id` value returned in the response can be used as
+                the `userId` parameter in `GET /users/{userId}`.
+        '404':
+          $ref: '#/components/responses/404Response'
+
+    put:
+      tags:
+        -  SchoolManager
+      operationId: putStudent
+      parameters:
+        - name: id
+          in: path
+          description: id of student
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: english
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+            examples:
+              StudentBodyExample:
+                summary: example of student
+                value:
+                  id: 5
+                  name: Peter Panov
+                  phone: 098-89-34-567
+                  email: panov@gmail.com
+      callbacks:
+        myEvent:
+          '{$request.body#/callbackUrl}':
+            post:
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+                          example: Some event happened
+                      required:
+                        - message
+              responses:
+                '200':
+                  description: Your server returns this code if it accepts the callback
+      responses:
+        '200':
+          $ref: '#/components/responses/200StudentResponse'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+
+  /add:
+    post:
+      tags:
+        -  SchoolManager
+      operationId: postStudent
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+            examples:
+              StudentBodyExample:
+                summary: example of student
+                value:
+                  id: 5
+                  name: Peter Panov
+                  phone: 098-89-34-567
+                  email: panov@gmail.com
+      responses:
+        '200':
+          $ref: '#/components/responses/200StudentResponse'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          links:
+            PostStudent:
+              operationId: postStudent
+              description: post new student
+
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem
+        instance:
+          type: string
+          description: |
+            A URI reference that identifies the specific occurrence of the problem.
+            It can yield further information if de-referenced.
+        status:
+          type: integer
+          format: int32
+          description: |
+            The HTTP status code for this occurrence of the problem.
+            The HTTP status code generated by the origin server for this occurrence of the problem.
+        title:
+          type: string
+          description: problem
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+
+  responses:
+    200StudentResponse:
+      description: Successfully returns Student instance.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Student'
+    404Response:
+      description: A student with the specified ID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+  examples:
+    StudentResponseExample:
+      value:
+        id: 5
+        name: any person's first name and last name(Peter Panov)
+        phone: phone number(098-89-34-567)
+        email: email address(panov@gmail.com)
+      summary: A sample object

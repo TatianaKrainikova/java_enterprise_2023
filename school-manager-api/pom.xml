@@ -13,8 +13,12 @@
     <artifactId>school-manager-api</artifactId>
 
     <properties>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.target>18</maven.compiler.target>
+        <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <openapi-generator-maven-plugin.version>7.0.0</openapi-generator-maven-plugin.version>
+        <tomcat-embed-core.version>10.1.11</tomcat-embed-core.version>
+        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
+        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
     </properties>
 
     <dependencies>
@@ -34,6 +38,68 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson-databind-nullable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta.validation-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
+    <build>
+        <testOutputDirectory>${test.output}</testOutputDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>SCHOOL_MANAGER_API</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>spring</generatorName>
+                            <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
+                            <output>${project.build.directory}/generated-sources/</output>
+                            <apiPackage>com.hillel.api</apiPackage>
+                            <modelPackage>com.hillel.model</modelPackage>
+                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+                            <enablePostProcessFile>true</enablePostProcessFile>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useTags>true</useTags>
+                                <dateLibrary>legacy</dateLibrary>
+                                <library>spring-boot</library>
+                                <disallowAdditionalPropertiesIfNotPresent>
+                                    false
+                                </disallowAdditionalPropertiesIfNotPresent>
+                            </configOptions>
+                            <globalProperties>
+                                <skipFormModel>false</skipFormModel>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

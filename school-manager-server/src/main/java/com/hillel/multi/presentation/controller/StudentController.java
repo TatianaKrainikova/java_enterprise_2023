@@ -4,11 +4,14 @@ import com.hillel.multi.persistent.entity.Student;
 import com.hillel.multi.service.StudentsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/students")
@@ -23,12 +26,24 @@ public class StudentController {
         return studentsService.getAllStudents();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentsById(@PathVariable("id") int id,
-                                                   @RequestParam(value = "test",
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/{id}",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<Student> getStudentById(@PathVariable("id") int id,
+                                                   @RequestParam(value = "verbosity",
                                                    required = false,
-                                                   defaultValue = "all") String test) {
+                                                   defaultValue = "all") String verbosity) {
         return studentsService.getStudentById(id);
+    }
+
+    @PutMapping(value = "/{id}")
+    public Student updateStudent(@PathVariable int id,
+                                 @RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String language,
+                                 @RequestHeader Map<String, String> headers,
+                                 @RequestBody Student student) {
+        return studentsService.updateStudent(student);
     }
 
     @PostMapping("/add")
