@@ -1,6 +1,5 @@
 package com.hillel.multi.service;
 
-import com.hillel.multi.persistent.entity.Student;
 import com.hillel.multi.persistent.entity.Teacher;
 import org.springframework.http.ResponseEntity;
 
