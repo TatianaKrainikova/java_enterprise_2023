@@ -1,7 +1,7 @@
 package com.hillel.multi.presentation.controller;
 
 import com.hillel.multi.persistent.entity.Student;
-import com.hillel.multi.service.StudentsService;
+import com.hillel.multi.service.StudentsServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class StudentController {
 
     @Autowired
-    StudentsService studentsService;
+    StudentsServiceImpl studentsService;
 
     @GetMapping("/all")
     public @ResponseBody List<Student> getAllStudents() {

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StudentsService {
+public class StudentsServiceImpl implements StudentService {
 
     @Autowired
     StudentRepository studentRepository;
@@ -25,7 +25,7 @@ public class StudentsService {
     }
 
     public List<Student> getAllStudents() {
-        return new ArrayList<Student>((Collection<? extends Student>) studentRepository.findAll());
+        return new ArrayList<>((Collection<? extends Student>) studentRepository.findAll());
     }
 
     public Student updateStudent(Student student) {
