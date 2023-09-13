@@ -50,6 +50,32 @@
             <groupId>com.hillel.multi</groupId>
             <artifactId>school-manager-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-contract-verifier</artifactId>
+            <version>${spring-cloud-contract-verifier.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>spring-mock-mvc</artifactId>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+                <version>${spring-cloud-contract-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <testFramework>JUNIT5</testFramework>
+                    <testMode>MOCKMVC</testMode>
+                    <packageWithBaseClasses>com.hillel.multi.contracts.base</packageWithBaseClasses>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
