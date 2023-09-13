@@ -1,0 +1,8 @@
+{
+  "status": 404,
+  "reason": "Using the wrong data type",
+  "id": "someone",
+  "name": null,
+  "phone": null,
+  "email": null
+}

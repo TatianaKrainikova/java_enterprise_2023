@@ -45,7 +45,7 @@ public class StudentController {
 
     @RequestMapping(
             method = RequestMethod.GET,
-            value = "/{id}",
+            value = "/get/{id}",
             produces = {"application/json"}
     )
     public ResponseEntity<Student> getStudentById(@PathVariable("id") int id,
@@ -55,7 +55,7 @@ public class StudentController {
         return studentsService.getStudentById(id);
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/put/{id}")
     public Student updateStudent(@PathVariable int id,
                                  @RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String language,
                                  @RequestHeader Map<String, String> headers,
@@ -68,7 +68,7 @@ public class StudentController {
         return studentsService.addStudent(student);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteStudentById(@PathVariable("id") int id) {
         studentsService.deleteStudentById(id);
     }
