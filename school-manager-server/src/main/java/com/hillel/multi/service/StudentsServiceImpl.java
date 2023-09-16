@@ -1,5 +1,6 @@
 package com.hillel.multi.service;
 
+import com.hillel.multi.infrastructure.exceptions.NotFoundAllStudentsException;
 import com.hillel.multi.persistent.entity.Student;
 import com.hillel.multi.persistent.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class StudentsServiceImpl implements StudentService {
     }
 
     public List<Student> getAllStudents() {
+        // Example of using NotFoundAllStudentsException
+        // throw new NotFoundAllStudentsException();
         return new ArrayList<>((Collection<? extends Student>) studentRepository.findAll());
     }
 

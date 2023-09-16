@@ -1,0 +1,6 @@
+{
+  "status": 505,
+  "response": "something went wrong",
+  "reason": "entering wrong type of id",
+  "path": "/api/students/second"
+}
