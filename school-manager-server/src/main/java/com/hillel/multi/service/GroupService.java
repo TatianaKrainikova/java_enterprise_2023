@@ -6,7 +6,7 @@ import com.hillel.multi.persistent.entity.Student;
 import com.hillel.multi.persistent.entity.Teacher;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+import java.util.Set;
 
 public interface GroupService {
 
@@ -14,7 +14,7 @@ public interface GroupService {
 
     void deleteGroupById(int id);
 
-    Group addStudents(List<Student> students);
+    Group addStudents(Set<Student> students);
 
     Group addTeacher(Teacher teacher);
 

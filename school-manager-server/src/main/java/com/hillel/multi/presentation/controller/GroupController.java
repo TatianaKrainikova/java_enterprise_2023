@@ -7,7 +7,7 @@ import com.hillel.multi.persistent.entity.Teacher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RequestMapping(path = "/api/group")
 public interface GroupController {
@@ -19,7 +19,7 @@ public interface GroupController {
     void deleteGroupById(int id);
 
     @PutMapping("/add/students")
-    Group addStudents(List<Student> students);
+    Group addStudents(Set<Student> students);
 
     @PutMapping("/add/teacher")
     Group addTeacher(Teacher teacher);
