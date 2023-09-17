@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,17 +19,22 @@ import lombok.Setter;
 public class Student {
 
     @Id
+    @GeneratedValue
+    @Column(name = "student_id")
     private Integer id;
 
     @NotNull
-    @Column(name = "name")
+    @Column(name = "student_name")
     private String name;
 
-    @Column(name = "phone")
+    @Column(name = "student_phone")
     private String phone;
 
     @Email
-    @Column(name = "email")
+    @Column(name = "student_email")
     private String email;
+
+    @ManyToMany(mappedBy = "students")
+    private Set<Group> groups;
 
 }
