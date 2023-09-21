@@ -18,13 +18,13 @@ public interface GroupController {
     @DeleteMapping("/delete/{id}")
     void deleteGroupById(int id);
 
-    @PutMapping("/add/students")
+    @PutMapping("/add/students/{id}")
     Group addStudents(Set<Student> students);
 
-    @PutMapping("/add/teacher")
+    @PutMapping("/add/teacher/{id}")
     Group addTeacher(Teacher teacher);
 
-    @PutMapping("/add/course")
+    @PutMapping("/add/course/{id}")
     Group addCourse(Course course);
 
     @GetMapping("get/{id}")

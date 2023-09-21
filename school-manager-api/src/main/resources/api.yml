@@ -23,9 +23,9 @@ servers:
           - westeurope
           - southeastasia
       apiVersion:
-        default: api/students
-  - url: hhtp://localhost:{port}/api/students
-    description: base path
+        default: api
+  - url: hhtp://localhost:{port}/api
+    description: Base path
     variables:
       port:
         enum:
@@ -35,26 +35,32 @@ servers:
         default: '8080'
 
 tags:
-  - name: SchoolManager
-    description: Api to manage school functions
+  - name: StudentManager
+    description: Api to manage student functions
+  - name: TeacherManager
+    description: Api to manage teacher functions
+  - name: CourseManager
+    description: Api to manage course functions
+  - name: GroupManager
+    description: Api to manage group functions
 
 paths:
-  /{id}:
+  /students/get/{id}:
     get:
       tags:
-        - SchoolManager
-      description: get students by id
+        - StudentManager
+      description: Get student by id
       operationId: getStudentById
       parameters:
         - name: id
           in: path
-          description: id of student
+          description: Id of student
           required: true
           schema:
             type: string
         - name: verbosity
           in: query
-          description: param need to filter fields for internal/external calls
+          description: Param need to filter fields for internal/external calls
           required: false
           schema:
             type: string
@@ -77,16 +83,18 @@ paths:
                 The `id` value returned in the response can be used as
                 the `userId` parameter in `GET /users/{userId}`.
         '404':
-          $ref: '#/components/responses/404Response'
+          $ref: '#/components/responses/404StudentResponse'
 
+  /students/put/{id}:
     put:
       tags:
-        -  SchoolManager
-      operationId: putStudent
+        -  StudentManager
+      description: Update some data in student
+      operationId: updateStudent
       parameters:
         - name: id
           in: path
-          description: id of student
+          description: Id of student
           required: true
           schema:
             type: string
@@ -137,12 +145,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/404Response'
+        '404':
+          $ref: '#/components/responses/404StudentResponse'
 
-  /add:
+  /students/add:
     post:
       tags:
-        -  SchoolManager
-      operationId: postStudent
+        -  StudentManager
+      description: Post new student
+      operationId: addStudent
       requestBody:
         required: false
         content:
@@ -170,6 +183,481 @@ paths:
             PostStudent:
               operationId: postStudent
               description: post new student
+        '404':
+          $ref: '#/components/responses/404Response'
+
+  /students/get/all:
+    get:
+      tags:
+        -  StudentManager
+      description: Getting all students(list)
+      operationId: getAllStudents
+      responses:
+        '200':
+          description: Successfully returns a list of student
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfStudents'
+        '404':
+          $ref: '#/components/responses/404Response'
+
+  /students/delete/{id}:
+    delete:
+      tags:
+        -  StudentManager
+      description: Delete student by id
+      operationId: deleteStudentById
+      parameters:
+        - name: id
+          in: path
+          description: Id of student
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success deleting student by id
+        '404':
+          $ref: '#/components/responses/404StudentResponse'
+
+
+  /teachers/get/all:
+    get:
+      tags:
+        -  TeacherManager
+      description: Get all teachers(list)
+      operationId: getAllTeachers
+      responses:
+        '200':
+          description: Successfully returns a list of teachers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfTeachers'
+        '404':
+          $ref: '#/components/responses/404Response'
+
+  /teachers/delete/{id}:
+    delete:
+      tags:
+        -  TeacherManager
+      description: Delete teacher by id
+      operationId: fireTeacherById
+      parameters:
+        - name: id
+          in: path
+          description: Id of teacher
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success deleting teacher by id
+        '404':
+          $ref: '#/components/responses/404TeacherResponse'
+
+  /teachers/create:
+    post:
+      tags:
+        -  TeacherManager
+      description: Create new teacher
+      operationId: hireTeacher
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+            examples:
+              TeacherBodyExample:
+                summary: Example of teacher
+                value:
+                  id: 3
+                  name: Alex Pletnev
+                  phone: 098-56-90-875
+                  email: pletnev@gmail.com
+      responses:
+        '200':
+          $ref: '#/components/responses/200TeacherResponse'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '404':
+          $ref: '#/components/responses/404Response'
+
+  /teachers/get/{id}:
+    get:
+      tags:
+        - TeacherManager
+      description: Get teacher by id
+      operationId: getTeacherById
+      parameters:
+        - name: id
+          in: path
+          description: Id of teacher
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully returns Teacher instance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '404':
+          $ref: '#/components/responses/404TeacherResponse'
+
+  /teacher/put/{id}:
+    put:
+      tags:
+        -  TeacherManager
+      description: Update some data in teacher
+      operationId: updateTeacher
+      parameters:
+        - name: id
+          in: path
+          description: id of teacher
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: english
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+            examples:
+              TeacherBodyExample:
+                summary: example of teacher
+                value:
+                  id: 3
+                  name: Alex Pletnev
+                  phone: 098-56-90-875
+                  email: pletnev@gmail.com
+      responses:
+        '200':
+          $ref: '#/components/responses/200TeacherResponse'
+        '400':
+          $ref: '#/components/responses/404Response'
+        '404':
+          $ref: '#/components/responses/404TeacherResponse'
+
+  /course/create:
+    post:
+      tags:
+        -  CourseManager
+      description: Create new Course
+      operationId: createCourse
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+            examples:
+              CourseBodyExample:
+                summary: Example of course
+                value:
+                  id: 1
+                  name: java Pro
+                  cost: 15000
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '404':
+          $ref: '#/components/responses/404Response'
+
+  /course/delete/{id}:
+    delete:
+      tags:
+        -  CourseManager
+      description: Delete course by id
+      operationId: deleteCourseById
+      parameters:
+        - name: id
+          in: path
+          description: Id of course
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success deleting course by id
+        '404':
+          $ref: '#/components/responses/404CourseResponse'
+
+  /course/put/{id}:
+    put:
+      tags:
+        -  CourseManager
+      description: Update some data in course
+      operationId: updateCourse
+      parameters:
+        - name: id
+          in: path
+          description: Id of course
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+            default: english
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+            examples:
+              CourseBodyExample:
+                summary: Example of course
+                value:
+                  id: 1
+                  name: java Pro
+                  cost: 15000
+      responses:
+        '200':
+          $ref: '#/components/responses/200CourseResponse'
+        '400':
+          $ref: '#/components/responses/404Response'
+        '404':
+          $ref: '#/components/responses/404CourseResponse'
+
+  /courses/get/all:
+    get:
+      tags:
+        -  CourseManager
+      description: Get all courses
+      operationId: getAllCourses
+      responses:
+        '200':
+          description: Successfully returns a list of courses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfCourses'
+        '404':
+          $ref: '#/components/responses/404Response'
+
+  /courses/get/{id}:
+    get:
+      tags:
+        - CourseManager
+      description: Get course by id
+      operationId: getCourseById
+      parameters:
+        - name: id
+          in: path
+          description: Id of course
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully returns course instance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '404':
+          $ref: '#/components/responses/404CourseResponse'
+
+  /group/create:
+    post:
+      tags:
+        -  GroupManager
+      description: Create new Group
+      operationId: createGroup
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+            examples:
+              GroupBodyExample:
+                summary: Example of group
+                value:
+                  id: 4
+                  name: Group JavaPro
+                  students: Peter, Alice, Taras
+                  teacher: Alex
+                  course: Java Pro
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '404':
+          $ref: '#/components/responses/404Response'
+
+  /group/delete/{id}:
+    delete:
+      tags:
+        -  GroupManager
+      description: Delete group by id
+      operationId: deleteGroupById
+      parameters:
+        - name: id
+          in: path
+          description: Id of group
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success deleting group by id
+        '404':
+          $ref: '#/components/responses/404GroupResponse'
+
+  /group/add/students/{id}:
+    put:
+      tags:
+        -  GroupManager
+      description: Add students to group
+      operationId: addStudents
+      parameters:
+        - name: id
+          in: path
+          description: Id of group
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListOfStudents'
+            examples:
+              GroupBodyExample:
+                summary: Example of group
+                value:
+                  id: 4
+                  name: Group JavaPro
+                  students: Peter, Alice, Taras
+                  teacher: Alex
+                  course: Java Pro
+      responses:
+        '200':
+          $ref: '#/components/responses/200GroupResponse'
+        '400':
+          $ref: '#/components/responses/404Response'
+        '404':
+          $ref: '#/components/responses/404GroupResponse'
+
+  /group/add/teacher/{id}:
+    put:
+      tags:
+        -  GroupManager
+      description: Add teacher to group
+      operationId: addTeacher
+      parameters:
+        - name: id
+          in: path
+          description: Id of group
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+            examples:
+              GroupBodyExample:
+                summary: Example of group
+                value:
+                  id: 4
+                  name: Group JavaPro
+                  students: Peter, Alice, Taras
+                  teacher: Alex
+                  course: Java Pro
+      responses:
+        '200':
+          $ref: '#/components/responses/200GroupResponse'
+        '400':
+          $ref: '#/components/responses/404Response'
+        '404':
+          $ref: '#/components/responses/404GroupResponse'
+
+  /group/add/course/{id}:
+    put:
+      tags:
+        -  GroupManager
+      description: Add course to group
+      operationId: addCourse
+      parameters:
+        - name: id
+          in: path
+          description: Id of group
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+            examples:
+              GroupBodyExample:
+                summary: Example of group
+                value:
+                  id: 4
+                  name: Group JavaPro
+                  students: Peter, Alice, Taras
+                  teacher: Alex
+                  course: Java Pro
+      responses:
+        '200':
+          $ref: '#/components/responses/200GroupResponse'
+        '400':
+          $ref: '#/components/responses/404Response'
+        '404':
+          $ref: '#/components/responses/404GroupResponse'
+
+  /group/get/{id}:
+    get:
+      tags:
+        - GroupManager
+      description: Get group by id
+      operationId: getGroupById
+      parameters:
+        - name: id
+          in: path
+          description: Id of group
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully returns group instance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '404':
+          $ref: '#/components/responses/404GroupResponse'
 
 components:
   schemas:
@@ -181,18 +669,18 @@ components:
           description: A human-readable explanation specific to this occurrence of the problem
         instance:
           type: string
-          description: |
-            A URI reference that identifies the specific occurrence of the problem.
-            It can yield further information if de-referenced.
+          description: A URI reference that identifies the specific occurrence of the problem.
         status:
           type: integer
           format: int32
-          description: |
-            The HTTP status code for this occurrence of the problem.
-            The HTTP status code generated by the origin server for this occurrence of the problem.
+          description: The HTTP status code for this occurrence of the problem.
         title:
           type: string
-          description: problem
+          description: problem(fail in system)
+      required:
+        - detail
+        - status
+
     Student:
       type: object
       properties:
@@ -205,6 +693,66 @@ components:
         email:
           type: string
 
+    ListOfStudents:
+      type: array
+      items:
+        $ref: '#/components/schemas/Student'
+
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+
+    ListOfTeachers:
+      type: array
+      items:
+        $ref: '#/components/schemas/Teacher'
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        cost:
+          type: integer
+
+    ListOfCourses:
+      type: array
+      items:
+        $ref: '#/components/schemas/Course'
+
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        students:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+        teacher:
+          type: object
+          $ref: '#/components/schemas/Teacher'
+        course:
+          type: object
+          $ref: '#/components/schemas/Course'
+
+    ListOfGroups:
+      type: array
+      items:
+        $ref: '#/components/schemas/Group'
+
   responses:
     200StudentResponse:
       description: Successfully returns Student instance.
@@ -212,8 +760,50 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Student'
-    404Response:
+    200TeacherResponse:
+      description: Successfully returns Teacher instance.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Teacher'
+    200CourseResponse:
+      description: Successfully returns Course instance.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Course'
+    200GroupResponse:
+      description: Successfully returns Group instance.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Group'
+    404StudentResponse:
       description: A student with the specified ID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    404TeacherResponse:
+      description: A teacher with the specified ID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    404CourseResponse:
+      description: A course with the specified ID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    404GroupResponse:
+      description: A group with the specified ID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    404Response:
+      description: General problem. Something went wrong.
       content:
         application/json:
           schema:
@@ -227,3 +817,11 @@ components:
         phone: phone number(098-89-34-567)
         email: email address(panov@gmail.com)
       summary: A sample object
+    TeacherResponseExample:
+      value:
+        id: 3
+        name: any person's first name and last name(Alex Pletnev)
+        phone: phone number(098-56-90-875)
+        email: email address(pletnev@gmail.com)
+      summary: A sample object
+

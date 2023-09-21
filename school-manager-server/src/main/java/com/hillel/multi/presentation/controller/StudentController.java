@@ -38,7 +38,7 @@ public class StudentController {
         return new ResponseEntity<>(problemDetails, new HttpHeaders(), HttpStatus.CONFLICT);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/get/all")
     public @ResponseBody List<Student> getAllStudents() {
         return studentsService.getAllStudents();
     }
