@@ -1,12 +1,15 @@
 package com.hillel.multi.persistent.entity;
 
+import com.hillel.multi.service.validation.annotation.PhoneNumberConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Set;
 
+@Validated
 @Getter
 @Setter
 @Entity(name = "teacher")
@@ -21,6 +24,7 @@ public class Teacher {
     @Column(name = "teacher_name")
     private String name;
 
+    @PhoneNumberConstraint
     @Column(name = "teacher_phone")
     private String phone;
 
