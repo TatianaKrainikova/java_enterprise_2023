@@ -17,13 +17,14 @@ create table teachers (
 create table courses (
    course_id integer not null auto_increment,
    course_name varchar(255),
-   course_cost double,
+   course_cost integer,
    primary key (course_id)
    ) engine=InnoDB;
 
-create table groups (
+create table studygroups (
    group_id integer not null auto_increment,
    group_name varchar(255),
+   students varchar(255),
    teacher_id integer,
    course_id integer,
    primary key (group_id)
@@ -35,17 +36,19 @@ create table students_groups_table(
    primary key(student_id, group_id)
    ) engine=InnoDB;
 
-create table group_seq (
+create table groups_seq (
        next_val bigint
     ) engine=InnoDB;
 
-insert into group_seq values ( 1 );
+insert into groups_seq values ( 1 );
 
-alter table if exists students_groups_table constraint
+alter table students_groups_table
+add constraint
 foreign key (student_id)
 references students (student_id);
 
-alter table if exists students_groups_table constraint
+alter table students_groups_table
+add constraint
 foreign key (group_id)
-references groups (group_id);
+references studygroups (group_id);
 

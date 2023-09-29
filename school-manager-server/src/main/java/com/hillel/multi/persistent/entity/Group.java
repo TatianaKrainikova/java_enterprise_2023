@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "group")
-@Table(name = "groups")
+@Table(name = "studygroups")
 public class Group {
 
     @Id
@@ -25,7 +25,7 @@ public class Group {
 
     @ManyToMany
     @JoinTable(
-            name = "student_group_table",
+            name = "students_groups_table",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )

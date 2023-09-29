@@ -23,6 +23,6 @@ public class Course {
     private String name;
 
     @Column(name = "course_cost")
-    private Double cost;
+    private Integer cost;
 
 }
